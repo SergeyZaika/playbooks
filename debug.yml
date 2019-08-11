@@ -1,0 +1,24 @@
+---
+- name: Variables 
+  hosts: Sacond
+  become: yes
+ 
+  vars: 
+      massage1: privet
+      massage2: World
+      full: 
+      secret: ewwefdsfdfwefsdfwefdsdssdssddsdsdsds
+  tasks: 
+   - name: Print Secret variable
+     debug:  
+         var: secret
+   - debug: 
+         msg: "Sekretnoe slovo {{secret}}"  
+   - debug: 
+         msg: "vladelec govna --> {{owner}}<--"
+   - set_fact: full "{{massage1}} {{massage2}} from {{owner}}"
+   - debug: 
+         var: full
+
+
+

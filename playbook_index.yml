@@ -1,0 +1,30 @@
+---
+- name: Apachi and my web page
+  hosts: AWS
+  become: yes
+
+  vars: 
+    source_file: /etc/ansible/index.html
+    destination_file: /var/www/html
+  tasks: 
+  - name: Install Apachi web Server
+    yum: name=httpd state=latest
+ 
+  - name: Copy Mypage to server
+    copy: src={{ source_file }} dest={{ destination_file }} mode=0555
+    notify: restart Apache
+
+  - name: Start server and make enable on boot
+    service: name=httpd state=started enabled=yes
+
+  handlers: 
+     - name: restart Apache
+       service: name=httpd state=restarted
+
+
+
+
+
+
+
+
