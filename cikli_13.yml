@@ -1,0 +1,41 @@
+---
+- name: MyWebSite
+  hosts: Debian
+  become: yes
+  
+  tasks:
+  - name: Hello Vasya Masha Serega Nastya
+    debug: msg="Hello {{ item }}"
+    # loop =with_items                __________  odno i toge
+    with_items:
+        - Vasya
+        - Masha
+        - Sergey
+        - Nastya
+  - name: loop Until example
+    shell: echo -n SERGEY >> myfile.txt && cat myfile.txt
+    # register в какую переменную запишем результат
+    register: output
+    # delay задержка в секундах
+    delay: 2
+    # retries сколько раз выполнить... без этой команды по умолчанию 3 раза     
+    retries: 10
+    #делать до того как output.stdout.find ("SERGEYSERGEYSERGEYSERGEY")
+    until: output.stdout.find ("SERGEYSERGEYSERGEYSERGEY") == false
+    
+  - name: Print output
+    debug:
+      var: output.stdout
+
+    # installl many app , packeged
+
+  - name: install packeged git tcpdump nmap
+    apt: name={{ item }} state=present
+    loop: 
+       - git
+       - tcpdump
+       - nmap
+
+
+
+
