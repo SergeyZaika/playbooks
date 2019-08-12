@@ -35,6 +35,9 @@
     notify:
        - restart Apache RedHat
        - restart Apache Debian
+# Второй способ, можно копировать ВСЕ
+# copy: src={{ item }} dest={{ destination_folder }} mode=0555
+# with_fileglob: "{{ source_folder }}/*.*"
   handlers: 
   - name: restart Apache RedHat
     service: name=httpd state=restarted
