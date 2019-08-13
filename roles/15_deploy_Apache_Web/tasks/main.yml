@@ -1,0 +1,42 @@
+---
+- name: check and print Lin version
+  debug: var=ansible_os_family
+- block: #block for Redat
+    - name: Install Apachi web Server for RedHat
+      yum: name=httpd state=latest
+    - name: Start server for RedHat
+      service: name=httpd state=started enabled=yes
+  when: ansible_os_family == "RedHat"
+- block:  # block for Debian
+    - name: Install Apachi web Server for Debian
+      apt: name=apache2 state=latest
+    - name: Start server for Debian
+      service: name=apache2 state=started enabled=yes
+  when: ansible_os_family == "Debian"
+ # Jinja копируем изсменяемый файл
+- name: Generate INDEX.HTML file
+  template: src=index_my_web_site.j2 dest={{dest_folder}}/index.html mode=0555
+  notify:
+       - restart Apache RedHat
+       - restart Apache Debian
+
+- name: Copy Mypage to WebServer
+  copy: src={{item}} dest={{dest_folder }} mode=0555
+  loop:
+    - "earth.jpg"
+  # - "index_my_web_site.html"
+    - "planets.jpg"
+    - "luna.jpg"
+    - "system.jpg"
+  notify:
+    - restart Apache RedHat
+    - restart Apache Debian
+
+
+
+
+
+
+
+
+

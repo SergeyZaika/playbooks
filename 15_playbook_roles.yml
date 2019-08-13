@@ -1,0 +1,11 @@
+---
+- name: Apachi and my webSite
+  hosts: all 
+  become: yes
+
+  roles: 
+     - {role: 15_deploy_Apache_Web, when: ansible_system== 'Linux'}
+
+
+
+
