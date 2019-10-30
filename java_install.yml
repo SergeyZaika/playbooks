@@ -1,0 +1,43 @@
+---
+- name: install java-8-JDK
+  hosts: "{{ HOSTS }}"
+  become: yes
+
+  tasks:
+  - name: install aptitude
+    apt:
+      name: aptitude
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+  - name: install JAVA8 JDK
+    apt:
+      update_cache: yes
+      name: openjdk-8-jdk
+      state: present
+
+  - name: test java-version    
+    shell: java -version
+    register: results
+  
+  - debug:
+      var: results.stderr_lines
+
+  - name: Set java JAVA_HOME
+    shell: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    shell: echo $JAVA_HOME
+    register: JAVAHOME
+    
+  - name: JAVA_HOME
+    debug:
+      var: JAVAHOME.stdout
+
+  - name: Set java PATH
+    shell: export PATH=$PATH:$JAVA_HOME/bin
+    shell: echo $PATH
+    register: PATH
+  
+  - name: PATH
+    debug:  
+      var: PATH.stdout_lines
+

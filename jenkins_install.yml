@@ -1,0 +1,44 @@
+---
+- name: install jenkins
+  hosts: "{{ HOSTS }}"
+  become: yes
+# needed JAVA!!!!!!  
+  tasks:
+  - name: update_cache
+    apt:
+      update_cache: yes 
+
+  
+  - name: Add Jenkins-CI Repository Key
+    apt_key:
+      url: "http://pkg.jenkins-ci.org/{{ ansible_os_family|lower }}/jenkins-ci.org.key"
+      state: present
+
+  - name: Add Jenkins-CI Repository
+    apt_repository:
+      repo: 'deb http://pkg.jenkins-ci.org/{{ ansible_os_family|lower }} binary/'
+      state: present
+      update_cache: yes
+
+  - name: Install Jenkins-CI
+    apt:
+      name: jenkins
+      state: present
+      update_cache: yes
+      cache_valid_time: 600
+    notify: Restart Jenkins
+    register: install_jenkins
+
+  - name: initialAdminPassword
+    shell: cat /var/lib/jenkins/secrets/initialAdminPassword    
+    register: initialAdminPassword
+    
+  - debug: 
+      var: initialAdminPassword.stdout   
+
+  handlers: 
+  - name: Restart Jenkins     
+    service: name=jenkins state=restarted
+
+
+      

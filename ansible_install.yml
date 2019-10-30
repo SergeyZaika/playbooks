@@ -1,0 +1,39 @@
+---
+- name: install docker
+  hosts: "{{ HOSTS }}"
+  become: yes
+  vars:
+
+  tasks:
+  - name: install aptitude
+    apt:
+      name: aptitude
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+
+  - name: install requiared
+    apt: name={{ item }} state=latest update_cache=yes
+    loop: ['software-properties-common','python3-pip']
+    
+  - name: update_cache
+    apt:
+      update_cache: yes
+
+  - name: Install ansible - pip3
+    shell: pip3 install ansible 
+    register: ansible_version
+
+  - debug:
+      var: ansible_version
+
+       
+
+    
+
+
+
+
+
+
+
